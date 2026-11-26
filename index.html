@@ -8,7 +8,6 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 body{background:#f5f5f5;padding:20px 16px}
 .timeline{max-width:640px;margin:0 auto}
-/* 时间线条目 */
 .item{display:flex;gap:14px;margin-bottom:26px}
 .date-tag{width:72px;flex-shrink:0;text-align:right;color:#888;font-size:14px;padding-top:4px}
 .dot-wrap{position:relative}
@@ -16,12 +15,17 @@ body{background:#f5f5f5;padding:20px 16px}
 .line{position:absolute;top:16px;left:4px;width:2px;height:calc(100% - 10px);background:#e2e2e2}
 .card{flex:1;background:#fff;border-radius:14px;padding:16px;overflow:hidden}
 .card-text{font-size:15px;color:#333;line-height:1.6;margin-bottom:12px}
-/* 图片网格 */
-.img-grid{display:grid;gap:6px}
+.img-grid{display:grid;gap:6px;margin-bottom:10px}
 .img-1{grid-template-columns:1fr}
 .img-2,.img-3,.img-4{grid-template-columns:1fr 1fr}
 .img-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;cursor:pointer;transition:0.2s}
 .img-grid img:hover{opacity:0.92}
+/* 视频、音频样式 */
+video, audio {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom:10px;
+}
 /* 大图弹窗 */
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z:999;display:none;align-items:center;justify-content:center;padding:20px}
 .lightbox img{max-width:92%;max-height:92%;border-radius:6px}
@@ -31,7 +35,22 @@ body{background:#f5f5f5;padding:20px 16px}
 </head>
 <body>
 <div class="timeline">
-  <!-- ========== 11月26日 这条就是你现在的记录 ========== -->
+  <!-- ========== 新增：11🈷27 视频记录（放在最顶部） ========== -->
+  <div class="item">
+    <div class="date-tag">11🈷27</div>
+    <div class="dot-wrap">
+      <div class="dot"></div>
+      <div class="line"></div>
+    </div>
+    <div class="card">
+      <div class="card-text">🎬 小片段</div>
+      <video controls>
+        <source src="video(2).mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <!-- ========== 11🈷26 图文记录 ========== -->
   <div class="item">
     <div class="date-tag">11🈷26</div>
     <div class="dot-wrap">
@@ -49,7 +68,7 @@ body{background:#f5f5f5;padding:20px 16px}
     </div>
   </div>
 
-  <!-- ========== 以后新增记录直接复制下面这一段模板 ==========
+  <!-- ==========【模板1：带视频】复制这段就能用 ==========
   <div class="item">
     <div class="date-tag">11🈷27</div>
     <div class="dot-wrap">
@@ -57,13 +76,47 @@ body{background:#f5f5f5;padding:20px 16px}
       <div class="line"></div>
     </div>
     <div class="card">
-      <div class="card-text">这里写文字内容，可以空着</div>
-      <div class="img-grid img-1">
-        <img src="图片地址" alt="">
-      </div>
+      <div class="card-text">拍的小视频🎬</div>
+      <video controls>
+        <source src="你的视频.mp4" type="video/mp4">
+      </video>
     </div>
   </div>
-  图片数量修改：img-1 / img-2 / img-3 / img-4
+  -->
+
+  <!-- ==========【模板2：带音频】复制这段就能用 ==========
+  <div class="item">
+    <div class="date-tag">11🈷28</div>
+    <div class="dot-wrap">
+      <div class="line"></div>
+      <div class="dot"></div>
+    </div>
+    <div class="card">
+      <div class="card-text">一段语音🎧</div>
+      <audio controls>
+        <source src="你的音频.mp3" type="audio/mpeg">
+      
+    </div>
+  </div>
+  -->
+
+  <!-- ==========【模板3：图文+视频混在一起】 ==========
+  <div class="item">
+    <div class="date-tag">11🈷29</div>
+    <div class="dot-wrap">
+      <div class="dot"></div>
+      <div class="line"></div>
+    </div>
+    <div class="card">
+      <div class="card-text">图文+视频一起发</div>
+      <div class="img-grid img-1">
+        <img src="图片.jpg" alt="">
+      </div>
+      <video controls>
+        <source src="视频.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
   -->
 </div>
 
@@ -85,7 +138,6 @@ document.querySelectorAll('.img-grid img').forEach(img=>{
 function closeLight(){
   lb.classList.remove('show')
 }
-// ESC关闭大图
 document.onkeydown = e=>{
   if(e.key==='Escape') closeLight()
 }
@@ -95,5 +147,3 @@ lb.onclick = e=>{
 </script>
 </body>
 </html>
-
-
