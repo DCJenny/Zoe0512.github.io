@@ -3,150 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日常记录</title>
+<title>Zoe的秘密空间</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-body{background:#f5f5f5;padding:20px 16px}
-.timeline{max-width:640px;margin:0 auto}
-.item{display:flex;gap:14px;margin-bottom:26px}
-.date-tag{width:72px;flex-shrink:0;text-align:right;color:#888;font-size:14px;padding-top:4px}
-.dot-wrap{position:relative}
-.dot{width:10px;height:10px;border-radius:50%;background:#bbb;margin-top:6px}
-.line{position:absolute;top:16px;left:4px;width:2px;height:calc(100% - 10px);background:#e2e2e2}
-.card{flex:1;background:#fff;border-radius:14px;padding:16px;overflow:hidden}
-.card-text{font-size:15px;color:#333;line-height:1.6;margin-bottom:12px}
-.img-grid{display:grid;gap:6px;margin-bottom:10px}
-.img-1{grid-template-columns:1fr}
-.img-2,.img-3,.img-4{grid-template-columns:1fr 1fr}
-.img-grid img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;cursor:pointer;transition:0.2s}
-.img-grid img:hover{opacity:0.92}
-/* 视频、音频样式 */
-video, audio {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom:10px;
-}
-/* 大图弹窗 */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z:999;display:none;align-items:center;justify-content:center;padding:20px}
-.lightbox img{max-width:92%;max-height:92%;border-radius:6px}
-.lightbox.show{display:flex}
-.lightbox .close{position:absolute;top:18px;right:22px;color:#fff;font-size:30px;cursor:pointer}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f5f7;
+    color: #2c2c2c;
+    min-height: 100vh;
+    padding: 24px 0;
+  }
+  .timeline {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* ===== 一条记录 ===== */
+  .entry {
+    display: flex;
+    gap: 16px;
+    position: relative;
+    padding-bottom: 28px;
+  }
+  /* 左侧时间轴 */
+  .entry .date-col {
+    flex: 0 0 72px;
+    text-align: center;
+    position: relative;
+  }
+  .entry .date-col::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 14px;
+    bottom: -28px;
+    width: 1px;
+    background: #e2e2e7;
+  }
+  .entry:last-child .date-col::before { display: none; }
+  .entry .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #ff8a80;
+    margin: 5px auto 0;
+    position: relative;
+    z-index: 1;
+  }
+  .entry .date {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+  .entry .date small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #999;
+    margin-top: 2px;
+  }
+
+  /* 右侧卡片 */
+  .entry .card {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  .entry .text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #333;
+  }
+  /* 纯文字记录没有图片时，文字区即可；图文/纯图把 p 删掉就行 */
+
+  /* ===== 图片组 ===== */
+  .imgs { display: grid; gap: 8px; margin-top: 12px; }
+  .imgs.c1 { grid-template-columns: 1fr; max-width: 280px; }
+  .imgs.c2 { grid-template-columns: repeat(2, 1fr); }
+  .imgs.c3 { grid-template-columns: repeat(3, 1fr); }
+  .imgs.c4 { grid-template-columns: repeat(2, 1fr); }
+  .imgs img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .imgs img:hover { transform: scale(1.02); }
+  .imgs.c1 img { aspect-ratio: 3 / 4; }
+
+  /* ===== 灯箱（点击放大） ===== */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 99;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 12px;
+    object-fit: contain;
+  }
+  .lightbox .close {
+    position: absolute;
+    top: 18px; right: 24px;
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .lightbox .nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 34px;
+    cursor: pointer;
+    padding: 12px;
+    user-select: none;
+  }
+  .lightbox .prev { left: 12px; }
+  .lightbox .next { right: 12px; }
+
+  @media (max-width: 480px) {
+    .entry { gap: 10px; }
+    .entry .date-col { flex: 0 0 58px; }
+    .entry .date { font-size: 12px; }
+    .imgs.c1 { max-width: 220px; }
+  }
 </style>
 </head>
 <body>
-<div style="background:#fff3cd; color:#856404; padding:8px 12px; text-align:center; font-size:14px;">
-当前版本做得有些仓促，等我空了再调~另外本网页不记录浏览行为，不会向开发者回传任何用户数据。
-</div>
+
 <div class="timeline">
-  <!-- ========== 新增：11🈷27 视频记录（放在最顶部） ========== -->
-  <div class="item">
-    <div class="date-tag">11🈷27</div>
-    <div class="dot-wrap">
-      <div class="dot"></div>
-      <div class="line"></div>
-    </div>
-    <div class="card">
-      <div class="card-text">🎬 小片段</div>
-      <video controls>
-        <source src="video(2).mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
 
-  <!-- ========== 11🈷26 图文记录 ========== -->
-  <div class="item">
-    <div class="date-tag">11🈷26</div>
-    <div class="dot-wrap">
+  <!-- ========== 临时记录（无日期） ========== -->
+  <article class="entry">
+    <div class="date-col">
+      <div class="date">临时</div>
       <div class="dot"></div>
-      <div class="line"></div>
     </div>
     <div class="card">
-      <div class="card-text">今日碎片✨</div>
-      <div class="img-grid img-4">
-        <img src="微信图片_20261126181410_281_106.jpg" alt="照片">
-        <img src="微信图片_20261126181413_282_106.jpg" alt="照片">
-        <img src="微信图片_20261126181415_283_106.jpg" alt="照片">
-        <img src="微信图片_20261126181416_284_106.jpg" alt="照片">
+      <p class="text">我好好吃饭啦！如果这真的是最后一场，那就尽全力好好享受，给这一段篇章留下幸福的尾声吧～～</p>
+      <div class="imgs c1">
+        <img src="1127.jpg" data-full="1127.jpg" alt="照片">
       </div>
     </div>
-  </div>
+  </article>
 
-  <!-- ==========【模板1：带视频】复制这段就能用 ==========
-  <div class="item">
-    <div class="date-tag">11🈷27</div>
-    <div class="dot-wrap">
-      <div class="dot"></div>
-      <div class="line"></div>
-    </div>
-    <div class="card">
-      <div class="card-text">拍的小视频🎬</div>
-      <video controls>
-        <source src="你的视频.mp4" type="video/mp4">
-      </video>
-    </div>
-  </div>
-  -->
-
-  <!-- ==========【模板2：带音频】复制这段就能用 ==========
-  <div class="item">
-    <div class="date-tag">11🈷28</div>
-    <div class="dot-wrap">
-      <div class="line"></div>
+  <!-- ========== 记录 1：11月26日（4张图） ==========
+       想加文字：在 .card 里保留 <p class="text">你的文字</p>
+       纯图：删掉这行 <p> 即可
+       纯文字：删掉下面的 <div class="imgs"> 整段 -->
+  <article class="entry">
+    <div class="date-col">
+      <div class="date">26日</div>
+      <small>11月</small>
       <div class="dot"></div>
     </div>
     <div class="card">
-      <div class="card-text">一段语音🎧</div>
-      <audio controls>
-        <source src="你的音频.mp3" type="audio/mpeg">
-      
-    </div>
-  </div>
-  -->
-
-  <!-- ==========【模板3：图文+视频混在一起】 ==========
-  <div class="item">
-    <div class="date-tag">11🈷29</div>
-    <div class="dot-wrap">
-      <div class="dot"></div>
-      <div class="line"></div>
-    </div>
-    <div class="card">
-      <div class="card-text">图文+视频一起发</div>
-      <div class="img-grid img-1">
-        <img src="图片.jpg" alt="">
+      <!-- 文字区（不需要可删除）
+      <p class="text">今天的小记录。</p>
+      -->
+      <div class="imgs c4">
+        <img src="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg" data-full="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg" alt="照片1">
+        <img src="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg" data-full="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg" alt="照片2">
+        <img src="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg" data-full="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg" alt="照片3">
+        <img src="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg" data-full="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg" alt="照片4">
       </div>
-      <video controls>
-        <source src="视频.mp4" type="video/mp4">
-      </video>
     </div>
-  </div>
+  </article>
+
+  <!-- ========== 新增记录模板（复制这一整段即可）
+  <article class="entry">
+    <div class="date-col">
+      <div class="date">X日</div>
+      <small>X月</small>
+      <div class="dot"></div>
+    </div>
+    <div class="card">
+      <p class="text">这里写文字（不需要可删）。</p>
+      <div class="imgs c1">  <!-- c1一张 / c2两张 / c3三张 / c4四张 -->
+        <img src="图片直链" data-full="图片直链" alt="照片">
+      </div>
+    </div>
+  </article>
   -->
+
 </div>
 
-<!-- 放大弹窗 -->
-<div class="lightbox" id="lb">
-  <span class="close" onclick="closeLight()">×</span>
-  <img id="lbimg" src="">
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox">
+  <span class="close" id="closeBtn">&times;</span>
+  <span class="nav prev" id="prevBtn">&#10094;</span>
+  <img id="lightboxImg" src="" alt="大图">
+  <span class="nav next" id="nextBtn">&#10095;</span>
 </div>
 
 <script>
-const lb = document.getElementById('lb')
-const lbimg = document.getElementById('lbimg')
-document.querySelectorAll('.img-grid img').forEach(img=>{
-  img.onclick = ()=>{
-    lbimg.src = img.src
-    lb.classList.add('show')
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const closeBtn = document.getElementById('closeBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  // 收集所有可放大的图片，支持左右切换
+  const allImgs = Array.from(document.querySelectorAll('.imgs img'));
+  let currentIndex = 0;
+
+  function openBox(index) {
+    currentIndex = index;
+    lightboxImg.src = allImgs[index].dataset.full || allImgs[index].src;
+    lightbox.classList.add('open');
   }
-})
-function closeLight(){
-  lb.classList.remove('show')
-}
-document.onkeydown = e=>{
-  if(e.key==='Escape') closeLight()
-}
-lb.onclick = e=>{
-  if(e.target===lb) closeLight()
-}
+  function closeBox() {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  }
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + allImgs.length) % allImgs.length;
+    lightboxImg.src = allImgs[currentIndex].dataset.full || allImgs[currentIndex].src;
+  }
+  function showNext() {
+    currentIndex = (currentIndex + 1) % allImgs.length;
+    lightboxImg.src = allImgs[currentIndex].dataset.full || allImgs[currentIndex].src;
+  }
+
+  allImgs.forEach((img, i) => {
+    img.addEventListener('click', () => openBox(i));
+  });
+
+  closeBtn.addEventListener('click', closeBox);
+  prevBtn.addEventListener('click', showPrev);
+  nextBtn.addEventListener('click', showNext);
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeBox();
+  });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeBox();
+    if (e.key === 'ArrowLeft') showPrev();
+    if (e.key === 'ArrowRight') showNext();
+  });
 </script>
+
 </body>
 </html>
