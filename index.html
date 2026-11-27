@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zoe的秘密空间</title>
+<title>秘密基地</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -13,6 +13,19 @@
     min-height: 100vh;
     padding: 24px 0;
   }
+
+  /* 顶部提示横幅 */
+  .notice {
+    max-width: 680px;
+    margin: 0 auto 20px;
+    padding: 10px 16px;
+    background: #fff3cd;
+    color: #856404;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
   .timeline {
     max-width: 680px;
     margin: 0 auto;
@@ -26,7 +39,6 @@
     position: relative;
     padding-bottom: 28px;
   }
-  /* 左侧时间轴 */
   .entry .date-col {
     flex: 0 0 72px;
     text-align: center;
@@ -76,26 +88,40 @@
     line-height: 1.7;
     color: #333;
   }
-  /* 纯文字记录没有图片时，文字区即可；图文/纯图把 p 删掉就行 */
 
-  /* ===== 图片组 ===== */
-  .imgs { display: grid; gap: 8px; margin-top: 12px; }
-  .imgs.c1 { grid-template-columns: 1fr; max-width: 280px; }
-  .imgs.c2 { grid-template-columns: repeat(2, 1fr); }
-  .imgs.c3 { grid-template-columns: repeat(3, 1fr); }
-  .imgs.c4 { grid-template-columns: repeat(2, 1fr); }
-  .imgs img {
+  /* ===== 统一媒体预览（图片 / 视频同尺寸） ===== */
+  .media { display: grid; gap: 8px; margin-top: 12px; }
+  .media.single { max-width: 300px; grid-template-columns: 1fr; }
+  .media.grid2 { grid-template-columns: repeat(2, 1fr); }
+  .media-item {
+    position: relative;
     width: 100%;
     aspect-ratio: 1 / 1;
-    object-fit: cover;
     border-radius: 10px;
+    overflow: hidden;
     cursor: pointer;
-    transition: transform .15s ease;
+    background: #eee;
   }
-  .imgs img:hover { transform: scale(1.02); }
-  .imgs.c1 img { aspect-ratio: 3 / 4; }
+  .media-item img,
+  .media-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .media-item .play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
+    text-shadow: 0 1px 6px rgba(0,0,0,.6);
+    pointer-events: none;
+  }
 
-  /* ===== 灯箱（点击放大） ===== */
+  /* ===== 灯箱（点击后弹窗放大 / 播放） ===== */
   .lightbox {
     position: fixed;
     inset: 0;
@@ -107,7 +133,8 @@
     z-index: 99;
   }
   .lightbox.open { display: flex; }
-  .lightbox img {
+  .lightbox img,
+  .lightbox video {
     max-width: 100%;
     max-height: 90vh;
     border-radius: 12px;
@@ -138,123 +165,153 @@
     .entry { gap: 10px; }
     .entry .date-col { flex: 0 0 58px; }
     .entry .date { font-size: 12px; }
-    .imgs.c1 { max-width: 220px; }
+    .media.single { max-width: 230px; }
   }
 </style>
 </head>
 <body>
 
-<div class="timeline">
+  <!-- 顶部提示 -->
+  <div class="notice">
+    当前版本做得有些仓促，等我空了再调。本页面不会收集、上传你的任何浏览数据，你的操作不会回传给开发者。
+  </div>
 
-  <!-- ========== 临时记录（无日期） ========== -->
-  <article class="entry">
-    <div class="date-col">
-      <div class="date">临时</div>
-      <div class="dot"></div>
-    </div>
-    <div class="card">
-      <p class="text">我好好吃饭啦！如果这真的是最后一场，那就尽全力好好享受，给这一段篇章留下幸福的尾声吧～～</p>
-      <div class="imgs c1">
-        <img src="1127.jpg" data-full="1127.jpg" alt="照片">
+  <div class="timeline">
+
+    <!-- ========== 临时记录（无日期） ========== -->
+    <article class="entry">
+      <div class="date-col">
+        <div class="date">临时</div>
+        <div class="dot"></div>
       </div>
-    </div>
-  </article>
-
-  <!-- ========== 记录 1：11月26日（4张图） ==========
-       想加文字：在 .card 里保留 <p class="text">你的文字</p>
-       纯图：删掉这行 <p> 即可
-       纯文字：删掉下面的 <div class="imgs"> 整段 -->
-  <article class="entry">
-    <div class="date-col">
-      <div class="date">26日</div>
-      <small>11月</small>
-      <div class="dot"></div>
-    </div>
-    <div class="card">
-      <!-- 文字区（不需要可删除）
-      <p class="text">今天的小记录。</p>
-      -->
-      <div class="imgs c4">
-        <img src="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg" data-full="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg" alt="照片1">
-        <img src="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg" data-full="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg" alt="照片2">
-        <img src="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg" data-full="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg" alt="照片3">
-        <img src="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg" data-full="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg" alt="照片4">
+      <div class="card">
+        <p class="text">我好好吃饭啦！如果这真的是最后一场，那就尽全力好好享受，给这一段篇章留下幸福的尾声吧～～</p>
+        <div class="media single">
+          <div class="media-item" data-type="img" data-src="1127.jpg">
+            <img src="1127.jpg" alt="照片">
+          </div>
+        </div>
       </div>
-    </div>
-  </article>
+    </article>
 
-  <!-- ========== 新增记录模板（复制这一整段即可）
-  <article class="entry">
-    <div class="date-col">
-      <div class="date">X日</div>
-      <small>X月</small>
-      <div class="dot"></div>
-    </div>
-    <div class="card">
-      <p class="text">这里写文字（不需要可删）。</p>
-      <div class="imgs c1">  <!-- c1一张 / c2两张 / c3三张 / c4四张 -->
-        <img src="图片直链" data-full="图片直链" alt="照片">
+    <!-- ========== 11月27日 视频记录 ========== -->
+    <article class="entry">
+      <div class="date-col">
+        <div class="date">27日</div>
+        <small>11月</small>
+        <div class="dot"></div>
       </div>
-    </div>
-  </article>
-  -->
+      <div class="card">
+        <p class="text">🎬 小片段</p>
+        <div class="media single">
+          <div class="media-item" data-type="video" data-src="video(2).mp4">
+            <video src="video(2).mp4" preload="metadata" muted playsinline></video>
+            <span class="play">▶</span>
+          </div>
+        </div>
+      </div>
+    </article>
 
-</div>
+    <!-- ========== 11月26日 图文记录（4张图） ========== -->
+    <article class="entry">
+      <div class="date-col">
+        <div class="date">26日</div>
+        <small>11月</small>
+        <div class="dot"></div>
+      </div>
+      <div class="card">
+        <div class="media grid2">
+          <div class="media-item" data-type="img" data-src="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg">
+            <img src="https://i.ibb.co/7N43WPtv/20261126181410-281-106.jpg" alt="照片1">
+          </div>
+          <div class="media-item" data-type="img" data-src="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg">
+            <img src="https://i.ibb.co/Txbr2njT/20261126181413-282-106.jpg" alt="照片2">
+          </div>
+          <div class="media-item" data-type="img" data-src="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg">
+            <img src="https://i.ibb.co/8nkfbKy9/20261126181415-283-106.jpg" alt="照片3">
+          </div>
+          <div class="media-item" data-type="img" data-src="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg">
+            <img src="https://i.ibb.co/1JPTpGq7/20261126181416-284-106.jpg" alt="照片4">
+          </div>
+        </div>
+      </div>
+    </article>
 
-<!-- 灯箱 -->
-<div class="lightbox" id="lightbox">
-  <span class="close" id="closeBtn">&times;</span>
-  <span class="nav prev" id="prevBtn">&#10094;</span>
-  <img id="lightboxImg" src="" alt="大图">
-  <span class="nav next" id="nextBtn">&#10095;</span>
-</div>
+  </div>
 
-<script>
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const closeBtn = document.getElementById('closeBtn');
-  const prevBtn = document.getElementById('prevBtn');
-  const nextBtn = document.getElementById('nextBtn');
+  <!-- 灯箱 -->
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="closeBtn">&times;</span>
+    <span class="nav prev" id="prevBtn">&#10094;</span>
+    <img id="lightboxImg" src="" alt="大图" style="display:none">
+    <video id="lightboxVideo" controls playsinline style="display:none"></video>
+    <span class="nav next" id="nextBtn">&#10095;</span>
+  </div>
 
-  // 收集所有可放大的图片，支持左右切换
-  const allImgs = Array.from(document.querySelectorAll('.imgs img'));
-  let currentIndex = 0;
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxVideo = document.getElementById('lightboxVideo');
+    const closeBtn = document.getElementById('closeBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-  function openBox(index) {
-    currentIndex = index;
-    lightboxImg.src = allImgs[index].dataset.full || allImgs[index].src;
-    lightbox.classList.add('open');
-  }
-  function closeBox() {
-    lightbox.classList.remove('open');
-    lightboxImg.src = '';
-  }
-  function showPrev() {
-    currentIndex = (currentIndex - 1 + allImgs.length) % allImgs.length;
-    lightboxImg.src = allImgs[currentIndex].dataset.full || allImgs[currentIndex].src;
-  }
-  function showNext() {
-    currentIndex = (currentIndex + 1) % allImgs.length;
-    lightboxImg.src = allImgs[currentIndex].dataset.full || allImgs[currentIndex].src;
-  }
+    const items = Array.from(document.querySelectorAll('.media-item'));
+    let current = 0;
 
-  allImgs.forEach((img, i) => {
-    img.addEventListener('click', () => openBox(i));
-  });
+    function render() {
+      const el = items[current];
+      if (el.dataset.type === 'video') {
+        lightboxImg.style.display = 'none';
+        lightboxVideo.style.display = 'block';
+        lightboxVideo.src = el.dataset.src;
+        lightboxVideo.play().catch(() => {});
+      } else {
+        lightboxVideo.style.display = 'none';
+        lightboxVideo.pause();
+        lightboxVideo.src = '';
+        lightboxImg.style.display = 'block';
+        lightboxImg.src = el.dataset.src;
+      }
+    }
 
-  closeBtn.addEventListener('click', closeBox);
-  prevBtn.addEventListener('click', showPrev);
-  nextBtn.addEventListener('click', showNext);
-  lightbox.addEventListener('click', e => {
-    if (e.target === lightbox) closeBox();
-  });
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeBox();
-    if (e.key === 'ArrowLeft') showPrev();
-    if (e.key === 'ArrowRight') showNext();
-  });
-</script>
+    function openBox(index) {
+      current = index;
+      render();
+      lightbox.classList.add('open');
+    }
+    function closeBox() {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+      lightboxVideo.pause();
+      lightboxVideo.src = '';
+    }
+    function showPrev() {
+      current = (current - 1 + items.length) % items.length;
+      render();
+    }
+    function showNext() {
+      current = (current + 1) % items.length;
+      render();
+    }
+
+    items.forEach((el, i) => {
+      el.addEventListener('click', () => openBox(i));
+    });
+
+    closeBtn.addEventListener('click', closeBox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeBox();
+    });
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeBox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    });
+  </script>
 
 </body>
 </html>
